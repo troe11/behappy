@@ -1,0 +1,26 @@
+button {
+    display: block;
+    width: 250px;
+    height: 100px;
+    font-size: 32px;
+    margin: 1% auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background: #9fa4e0;
+    color: #f1376b;
+}
+
+button:active {
+    box-shadow: 3px black;
+    transform: translateY(4px);
+}
+
+body {
+    background-image: url('bg.jpg');
+}
+
+button:focus {outline:0 !important;}
+
+#banner {
+	text-align: center;
+}
