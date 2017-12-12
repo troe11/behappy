@@ -8,27 +8,45 @@
 </head>
 
 <body>
-	<div class="container">
-		<div class='row' id='banner'>
-			<h2>Be Happy Web Appy!</h2>
-			<h3>How are you feeling today, 'name'</h3>
-		</div>
-		<div class="row">
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id='main'>
-				<button id="happiness">Happiness</button>
-				<button id="sadness">Sadness</button>
-				<button id="disgust">Disgust</button>
-				<button id="anger">Anger</button>
-				<button id="fear">Fear</button>
-				<button id="surprise">Surprise</button>
-				<button id="neutral">Neutral</button>
-			</div>
-		</div>
-
-
-	</div>
-
-
+    <div class="container">
+        <div class='row' id='banner'>
+            <h2>Be Happy Web Appy!</h2>
+            <h3>How are you feeling today, 'name'</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id='main'>
+                <button class='emotion' id="happiness">Happiness</button>
+                <button class='emotion' id="sadness">Sadness</button>
+                <button class='emotion' id="disgust">Disgust</button>
+                <button class='emotion' id="anger">Anger</button>
+                <button class='emotion' id="fear">Fear</button>
+                <button class='emotion' id="surprise">Surprise</button>
+                <button class='emotion' id="neutral">Neutral</button>
+            </div>
+        </div>
+    </div>
+    <form>
+        Email:
+        <input type="text" name="email" id="email">
+        <br> Password:
+        <input type="text" name="pw" id="password">
+        <br>
+        <input type="submit" value="Sign up" id="signUp">
+        <input type="submit" value="Sign in" id="signIn">
+        <input type="submit" value="Sign out" id="signOut">
+    </form>
+    <form>
+        Name:
+        <input type="text" name="name" id="name">
+        <br> Age:
+        <input type="text" name="age" id="age">
+        <br>
+        <input type="submit" value="Create user" id="create">
+    </form>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 </body>
 
 </html>
