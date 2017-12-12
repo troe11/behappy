@@ -13,14 +13,14 @@
         function foo(data)
         { console.log(data)
           $.each(
-            data.data.children.slice(0, 20),
+            data.data.children.slice(0, 200),
             function (i,post) {
-              console.log(i,post)
-              $("#reddit-content").append( '<br>' + post.data.title );
-              $("#reddit-content").append( '<br>' + post.data.url );
-              $("#reddit-content").append( '<br>' + post.data.permalink );
-              $("#reddit-content").append( '<br>' + post.data.domain );
-              $("#reddit-content").append( '<hr>' );
+              if (post.data.title.includes("[Text]")){
+              console.log(i,post.data.title);
+              var text = post.data.title.replace('[Text]','')
+              $("#reddit-content").append( '<br>' + text );
+
+              $("#reddit-content").append( '<hr>' );}
             }
           )
         }

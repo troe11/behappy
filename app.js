@@ -12,12 +12,36 @@ var database = firebase.database();
 
 var choices = function() {
     var choiceDiv = $('<div>');
-    var youTube = $('<button>').html('Video');
-    var spotify = $('<button>').html('Song');
-    choiceDiv.append(spotify);
-    choiceDiv.append(youTube);
+    var video = $('<button>').html('Video').attr('id', 'video');
+    var audio = $('<button>').html('Song').attr('id', 'audio');
+    var reddit = $('<button>').html('Reddit').attr('id', 'reddit');
+    var pickUpLine = $('<button>').html('Pick Up Line').attr('id', 'pickUp');
+    choiceDiv.append(audio, video, reddit, pickUpLine);
     $('#main').append(choiceDiv);
-}
+};
+
+$(document).on('click','#reddit', function() {
+    console.log('here')
+    $('#main').empty();
+    $.getJSON(
+        "http://www.reddit.com/r/getMotivated.json?jsonp=?",
+        function foo(data) {
+            console.log(data)
+            $.each(
+                data.data.children.slice(0, 200),
+                function(i, post) {
+                    if (post.data.title.includes("[Text]")) {
+                        console.log(i, post.data.title);
+                        var text = $('<div>').html(post.data.title.replace('[Text]', ''));
+                        $('#main').append(text)
+
+                    }
+                }
+            )
+        }
+    )
+
+})
 
 $('.emotion').on('click', function() {
     var user = firebase.auth().currentUser;
