@@ -51,12 +51,12 @@ $(document).on('click','#gif', function() {
 
 var types = function() {
     var typeDiv = $('<div>');
-    var anime = $('<button data-gif = "anime">').html('Anime').attr('class', 'giphy');
+    var cat = $('<button data-gif = "cat">').html('Cat').attr('class', 'giphy');
     var comedy = $('<button data-gif = "comedy">').html('Comedy').attr('class', 'giphy');
-    // var  = $('<button>').html('').attr('id', '');
-    // var  = $('<button>').html('').attr('id', '');
-    // var  = $('<button>').html('').attr('id', '');
-    typeDiv.append(anime, comedy);
+    var dog = $('<button data-gif = "dog">').html('Dog').attr('class', 'giphy');
+    // var  = $('<button>').html('').attr('class', 'giphy');
+    // var  = $('<button>').html('').attr('class', 'giphy');
+    typeDiv.append(cat, comedy, dog);
     $('#main').append(typeDiv);
 };
 
