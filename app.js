@@ -11,4 +11,5 @@ $(document).ready(function(){
   firebase.initializeApp(config);
   console.log(config)
 
+
 })
