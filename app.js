@@ -57,8 +57,6 @@ $('.emotion').on('click', function() {
         })
     } else { alert('You need to sign In or Up') }
     console.log(currentEmote, currentTime)
-
-
 })
 
 $('#signUp').on('click', function() {
@@ -111,7 +109,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         database.ref('/users').child(user.uid).once('value').then(function(snapshot) {
             //Look up documentation for once method
 
-            $('#status').html('Signed In')
+            $('#status').html('Signed In');
 
             userName = snapshot.val().name;
             userAge = snapshot.val().age;
