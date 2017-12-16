@@ -33,20 +33,19 @@ populateEmotions();
 //Update object in js, then 'update' to database
 $(document).on('click', '.emotion', function() {
     var thisEmote = $(this).attr('id');
-    database.ref().on('value',function(snapshot){
-        emotionCount = snapshot.val().emotionCount;
-        console.log(emotionCount);
-        // for (var i in emotionCount){
-        //     if(i == thisEmote){
-        //         ++emotionCount[i];
-        //         console.log(emotionCount)
-        //         database.ref().update({
-        //             emotionCount
-        //         })
-        //     }
-        // }
+    database.ref().on('value', function(snapshot) {
+        emotionCount = snapshot.val().emotionCounter;
+        console.log(emotionCount, snapshot.val().emotionCounter);
+        for (var i in emotionCount) {
+            if (i == thisEmote) {
+                ++emotionCount[i];
+                console.log(emotionCount)
+            }
+        }
     })
-        
+        // database.ref().update({
+        //     emotionCount
+        // })
     $('#main').empty();
     choices();
 })
@@ -78,12 +77,15 @@ $(document).on('click', '#reddit', function() {
                     if (post.data.title.includes("[Text]")) {
                         console.log(i, post.data.title);
                         var text = $('<div>')
-                        .html(post.data.title.replace('[Text]', ''))
-                        .addClass('redditText');
-                        $('#main').append(text)}
-                    })})
-setTimeout(function(){
-    resartOrNewChoice();},2000)
+                            .html(post.data.title.replace('[Text]', ''))
+                            .addClass('redditText');
+                        $('#main').append(text)
+                    }
+                })
+        })
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 2000)
 })
 
 //if gif choice is clicked, below code runs, populates with gif category choices
@@ -142,7 +144,7 @@ function displayGif(response) {
 //adds two buttons to the bottom, giving user the choice to go back to main
 //menu and choose new emotion, or select another choice
 var resartOrNewChoice = function() {
-    var newSelect = $('<div>').css('display','inline');
+    var newSelect = $('<div>').css('display', 'inline');
     var newChoice = $('<button>').html('New Choice').attr('id', 'newChoice');
     var resart = $('<button>').html('Change your Emotion?').attr('id', 'newEmotion');
     newSelect.append(newChoice, resart);
