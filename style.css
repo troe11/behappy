@@ -22,5 +22,42 @@ body {
 button:focus {outline:0 !important;}
 
 #banner {
-	text-align: center;
+    text-align: center;
+}
+
+#banner {
+    background: #ffcdd2;
+    color: #f1376b;
+    font-family: "Great Vibes";
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-size: 32px;
+    margin: 1% auto;
+}
+
+#happiness {
+    color: #ffecb3;
+}
+
+#sadness {
+    color: #3d5afe;
+}
+
+#disgust {
+    color: #a5d6a7;
+}
+
+#anger {
+    color: #f1376b;
+}
+
+#fear {
+    color: #303f9f;
+}
+
+#surprise {
+    color: #84ffff;
+}
+
+#neutral {
+    color: #eceff1;
 }
