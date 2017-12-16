@@ -8,6 +8,15 @@
   };
   firebase.initializeApp(config);
 var database = firebase.database();
+var emotionCount = {
+    Happiness: 0,
+    Sadness: 0,
+    Disgust: 0,
+    Anger: 0,
+    Fear: 0,
+    Surprise: 0,
+    Neutral: 0,
+}
 
 var emotions = ['Happiness', 'Sadness', 'Disgust', 'Anger', 'Fear', 'Surprise', 'Neutral'];
 //the below function populates the Main Div with buttons corresponding to the emotions array
@@ -28,7 +37,26 @@ populateEmotions();
 $(document).on('click', '.emotion', function() {
     $('#main').empty();
     choices();
+        var thisEmote = $(this).attr('id');
+    for (var i in emotionCount){
+        if(i == thisEmote){
+            ++emotionCount[i];
+            console.log(emotionCount)
+            database.ref().set({
+                   emotionCounter: emotionCount
+            })
+        }
+    }
 })
+
+database.ref().on("value", function(snapshot) {
+    console.log(snapshot.val())
+    emotionCounter = snapshot.val().emotionCount
+        }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+    
+    });
+
 
 var choices = function() {
     var choiceDiv = $('<div>');
