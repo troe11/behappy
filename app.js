@@ -10,6 +10,10 @@ firebase.initializeApp(config);
 var signedOn = true;
 var database = firebase.database();
 
+var emotionCount = {}
+
+
+
 var emotions = ['Happiness', 'Sadness', 'Disgust', 'Anger', 'Fear', 'Surprise', 'Neutral'];
 //the below function populates the Main Div with buttons corresponding to the emotions array
 var populateEmotions = function() {
@@ -26,19 +30,33 @@ populateEmotions();
 
 //when an emotion button is clicked, empty the Main Div, then use the choices function
 //to populate with new buttons - main choices: gif, reddit, etc.
+//Update object in js, then 'update' to database
 $(document).on('click', '.emotion', function() {
+    var thisEmote = $(this).attr('id');
+    database.ref().on('value',function(snapshot){
+        emotionCount = snapshot.val().emotionCount;
+        console.log(emotionCount);
+        // for (var i in emotionCount){
+        //     if(i == thisEmote){
+        //         ++emotionCount[i];
+        //         console.log(emotionCount)
+        //         database.ref().update({
+        //             emotionCount
+        //         })
+        //     }
+        // }
+    })
+        
     $('#main').empty();
     choices();
 })
 
 var choices = function() {
-    console.log('hello')
     var choiceDiv = $('<div>');
     var video = $('<button>').html('Video').attr('id', 'video');
     var audio = $('<button>').html('Song').attr('id', 'audio');
     var reddit = $('<button>').html('Reddit').attr('id', 'reddit');
     var pickUpLine = $('<button>').html('Pick Up Line').attr('id', 'pickUp');
-
     var giphy = $('<button>').html('Gif').attr('id', 'gif');
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
     $('#main').empty();
@@ -59,9 +77,14 @@ $(document).on('click', '#reddit', function() {
                 function(i, post) {
                     if (post.data.title.includes("[Text]")) {
                         console.log(i, post.data.title);
-                        var text = $('<div>').html(post.data.title.replace('[Text]', ''));
+                        var text = $('<div>')
+                        .html(post.data.title.replace('[Text]', ''))
+                        .addClass('redditText');
                         $('#main').append(text)}
-                    resartOrNewChoice();})})})
+                    })})
+setTimeout(function(){
+    resartOrNewChoice();},2000)
+})
 
 //if gif choice is clicked, below code runs, populates with gif category choices
 $(document).on('click', '#gif', function() {
@@ -128,9 +151,11 @@ var resartOrNewChoice = function() {
 
 //runs choices if newChoice is clicked in resartOrNewChoice
 $(document).on('click', '#newChoice', function() {
+    $('#main').empty();
     choices();
 })
 //runs original emotion div populator
 $(document).on('click', '#newEmotion', function() {
+    $('#main').empty();
     populateEmotions();
 })

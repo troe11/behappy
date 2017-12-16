@@ -24,3 +24,12 @@ button:focus {outline:0 !important;}
 #banner {
 	text-align: center;
 }
+
+.redditText {
+    border: 2px black solid;
+    font-size: 24px;
+    color: black;
+    font-family: italic;
+    background-color: gold;
+
+}
