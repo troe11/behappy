@@ -24,6 +24,3 @@ button:focus {outline:0 !important;}
 #banner {
 	text-align: center;
 }
-#anger {
-    @extend .red, .darken-1 
-}
