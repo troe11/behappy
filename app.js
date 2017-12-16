@@ -41,7 +41,7 @@ $(document).on('click', '.emotion', function() {
     for (var i in emotionCount){
         if(i == thisEmote){
             emotionCount[i]++;
-            console.log(emotionCount)
+            console.log(emotionCount, moment().format('dddd H:mm'))
             database.ref().set({
                     emotionCount
             })
@@ -50,7 +50,7 @@ $(document).on('click', '.emotion', function() {
 })
 
 database.ref().on("value", function(snapshot) {
-    console.log(snapshot.val())
+    console.log(snapshot.val(), moment().format('dddd H:mm'))
     emotionCount = snapshot.val().emotionCount
         }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
@@ -143,7 +143,7 @@ function displayGif(response) {
     });
     resartOrNewChoice();
 }
-
+    
 //adds two buttons to the bottom, giving user the choice to go back to main
 //menu and choose new emotion, or select another choice
 var resartOrNewChoice = function() {
