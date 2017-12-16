@@ -40,10 +40,10 @@ $(document).on('click', '.emotion', function() {
         var thisEmote = $(this).attr('id');
     for (var i in emotionCount){
         if(i == thisEmote){
-            ++emotionCount[i];
+            emotionCount[i]++;
             console.log(emotionCount)
             database.ref().set({
-                   emotionCounter: emotionCount
+                    emotionCount
             })
         }
     }
@@ -51,7 +51,7 @@ $(document).on('click', '.emotion', function() {
 
 database.ref().on("value", function(snapshot) {
     console.log(snapshot.val())
-    emotionCounter = snapshot.val().emotionCount
+    emotionCount = snapshot.val().emotionCount
         }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
     
