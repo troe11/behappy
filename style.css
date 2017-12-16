@@ -25,11 +25,18 @@ button:focus {outline:0 !important;}
 	text-align: center;
 }
 
-.redditText {
-    border: 2px black solid;
-    font-size: 24px;
-    color: black;
-    font-family: italic;
-    background-color: gold;
+.tinderImg {
+    height:200px;
+    width: 250px;
+}
+
+.stats, .redditText {
+    background: #9fa4e0;
+    color: #f1376b;
+    text-align: center;
+    font-size: 32px;
+    text-shadow: silver 0px 0px 1px;
+    -webkit-font-smoothing: antialiased;
+    padding: 2%;
 
 }

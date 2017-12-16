@@ -10,9 +10,15 @@ firebase.initializeApp(config);
 var signedOn = true;
 var database = firebase.database();
 
-var emotionCount = {}
-
-
+var emotionCount = {
+    Happiness: 0,
+    Sadness: 0,
+    Disgust: 0,
+    Anger: 0,
+    Fear: 0,
+    Surprise: 0,
+    Neutral: 0,
+}
 
 var emotions = ['Happiness', 'Sadness', 'Disgust', 'Anger', 'Fear', 'Surprise', 'Neutral'];
 //the below function populates the Main Div with buttons corresponding to the emotions array
@@ -32,30 +38,34 @@ populateEmotions();
 //to populate with new buttons - main choices: gif, reddit, etc.
 //Update object in js, then 'update' to database
 $(document).on('click', '.emotion', function() {
-    var thisEmote = $(this).attr('id');
-    database.ref().on('value', function(snapshot) {
-        emotionCount = snapshot.val().emotionCounter;
-        console.log(emotionCount, snapshot.val().emotionCounter);
-        for (var i in emotionCount) {
-            if (i == thisEmote) {
-                ++emotionCount[i];
-                console.log(emotionCount)
-            }
-        }
-    })
-        // database.ref().update({
-        //     emotionCount
-        // })
     $('#main').empty();
     choices();
+    var thisEmote = $(this).attr('id');
+    for (var i in emotionCount) {
+        if (i == thisEmote) {
+            emotionCount[i]++;
+            console.log(emotionCount)
+            database.ref().set({
+                emotionCount
+            })
+        }
+    }
 })
+
+database.ref().on("value", function(snapshot) {
+    emotionCount = snapshot.val().emotionCount
+}, function(errorObject) {
+    console.log("The read failed: " + errorObject.code);
+
+});
+
 
 var choices = function() {
     var choiceDiv = $('<div>');
     var video = $('<button>').html('Video').attr('id', 'video');
     var audio = $('<button>').html('Song').attr('id', 'audio');
-    var reddit = $('<button>').html('Reddit').attr('id', 'reddit');
-    var pickUpLine = $('<button>').html('Pick Up Line').attr('id', 'pickUp');
+    var reddit = $('<button>').html('Motivation').attr('id', 'reddit');
+    var pickUpLine = $('<button>').html('Bad Tinder Pickup Lines').attr('id', 'tinder');
     var giphy = $('<button>').html('Gif').attr('id', 'gif');
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
     $('#main').empty();
@@ -68,26 +78,50 @@ $(document).on('click', '#reddit', function() {
     console.log('here')
     $('#main').empty();
     $.getJSON(
-        "http://www.reddit.com/r/getMotivated.json?jsonp=?",
+        "https://www.reddit.com/r/GetMotivated/top/.json?count=25&after=t3_10omtd/",
         function foo(data) {
+            var text = [];
             console.log(data)
             $.each(
                 data.data.children.slice(0, 200),
                 function(i, post) {
                     if (post.data.title.includes("[Text]")) {
-                        console.log(i, post.data.title);
-                        var text = $('<div>')
-                            .html(post.data.title.replace('[Text]', ''))
-                            .addClass('redditText');
-                        $('#main').append(text)
+                        text.push(post.data.title.replace('[Text]', ''))
+
                     }
                 })
+            var randText = Math.floor(Math.random() * text.length);
+            var textDiv = $('<div>')
+                .html(text[randText])
+                .addClass('redditText');
+            $('#main').append(textDiv);
         })
     setTimeout(function() {
         resartOrNewChoice();
-    }, 2000)
+    }, 1000)
 })
 
+$(document).on('click', '#tinder', function() {
+    $('#main').empty();
+    $.getJSON(
+        "http://www.reddit.com/r/tinder.json?jsonp=?",
+        function foo(data) {
+            var images = [];
+            $.each(
+                data.data.children.slice(0, 200),
+                function(i, post) {
+                    if (post.data.domain.includes("i.redd.it")) {
+                        images.push(post.data.url);
+                    }
+                })
+            var randImg = Math.floor(Math.random() * images.length);
+            var image = $('<div>').html('<img src=' + images[randImg] + '>').addClass('center');
+            $('#main').append(image);
+        })
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 1000)
+})
 //if gif choice is clicked, below code runs, populates with gif category choices
 $(document).on('click', '#gif', function() {
     $('#main').empty();
@@ -147,7 +181,8 @@ var resartOrNewChoice = function() {
     var newSelect = $('<div>').css('display', 'inline');
     var newChoice = $('<button>').html('New Choice').attr('id', 'newChoice');
     var resart = $('<button>').html('Change your Emotion?').attr('id', 'newEmotion');
-    newSelect.append(newChoice, resart);
+    var getStatsBtn = $('<button>').html('Global Stats').attr('id', 'getStats');
+    newSelect.append(newChoice, resart, getStatsBtn);
     $('#main').append(newSelect);
 }
 
@@ -161,3 +196,26 @@ $(document).on('click', '#newEmotion', function() {
     $('#main').empty();
     populateEmotions();
 })
+
+$(document).on('click', '#getStats', function() {
+    $('#main').empty();
+    getStats();
+})
+var getStats = function() {
+    database.ref().on('value', function(snapshot) {
+        $('#main').empty();
+        var total = 0;
+        for (var i in emotionCount) {
+            total += emotionCount[i];
+        }
+        for (var i in emotionCount) {
+            console.log(total);
+            var emoteDiv = $('<div>').addClass('stats');
+            var emoteName = emoteDiv.html(i + ': ' + Math.floor(emotionCount[i] / total * 100) + '%<hr>');
+            $('#main').append(emoteDiv);
+        }
+
+    })
+    console.log('running')
+    resartOrNewChoice();
+}
