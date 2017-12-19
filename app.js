@@ -63,7 +63,7 @@ var choices = function() {
     var video = $('<button>').html('Video (n/a)').attr('id', 'video');
     var audio = $('<button>').html('Song (n/a)').attr('id', 'audio');
     var reddit = $('<button>').html('Reddit').attr('id', 'reddit');
-    var pickUpLine = $('<button>').html('Pick Up Line (n/a)').attr('id', 'pickUp');
+    var pickUpLine = $('<button>').html('Bad Tinder Pickup Lines').attr('id', 'tinder');
     var giphy = $('<button>').html('Gif').attr('id', 'gif');
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
     $('#main').append(choiceDiv);
@@ -74,20 +74,49 @@ $(document).on('click', '#reddit', function() {
     console.log('here')
     $('#main').empty();
     $.getJSON(
-        "http://www.reddit.com/r/getMotivated.json?jsonp=?",
+        "https://www.reddit.com/r/GetMotivated/top/.json?count=25&after=t3_10omtd/",
         function foo(data) {
+            var text = [];
             console.log(data)
             $.each(
                 data.data.children.slice(0, 200),
                 function(i, post) {
                     if (post.data.title.includes("[Text]")) {
-                        console.log(i, post.data.title);
-                        var text = $('<div>').html(post.data.title.replace('[Text]', ''));
-                        $('#main').append(text)}
-                    
+                        text.push(post.data.title.replace('[Text]', ''))
+
+                    }
                 })
-                resartOrNewChoice();  
+            var randText = Math.floor(Math.random() * text.length);
+            var textDiv = $('<div>')
+                .html(text[randText])
+                .addClass('redditText');
+            $('#main').append(textDiv);
         })
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 1000)
+})
+
+$(document).on('click', '#tinder', function() {
+    $('#main').empty();
+    $.getJSON(
+        "http://www.reddit.com/r/tinder.json?jsonp=?",
+        function foo(data) {
+            var images = [];
+            $.each(
+                data.data.children.slice(0, 200),
+                function(i, post) {
+                    if (post.data.domain.includes("i.redd.it")) {
+                        images.push(post.data.url);
+                    }
+                })
+            var randImg = Math.floor(Math.random() * images.length);
+            var image = $('<div>').html('<img src=' + images[randImg] + '>').addClass('center');
+            $('#main').append(image);
+        })
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 1000)
 })
 
 $(document).on('click','#gif', function() {
