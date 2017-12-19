@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <script src="http://j.mp/jqymin"></script>
+  </head>
+
+  <body>
+    <div id="reddit-content">
+    </div>
+
+    <script>
+      $.getJSON(
+        "http://www.reddit.com/r/getMotivated.json?jsonp=?",
+        function foo(data)
+        { console.log(data)
+          $.each(
+            data.data.children.slice(0, 200),
+            function (i,post) {
+              if (post.data.title.includes("[Text]")){
+              console.log(i,post.data.title);
+              var text = post.data.title.replace('[Text]','')
+              $("#reddit-content").append( '<br>' + text );
+
+              $("#reddit-content").append( '<hr>' );}
+            }
+          )
+        }
+      )
+      .success(function() { })
+      .error(function() { alert("error"); })
+      .complete(function() { });
+    </script>
+
+  </body>
+</html>
