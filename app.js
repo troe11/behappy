@@ -1,23 +1,76 @@
-  var config = {
+
+var config = {
     apiKey: "AIzaSyBpdGq5ONXfo854jcRj-4OwRWUYggFkRk4",
     authDomain: "be-happy-web-appy.firebaseapp.com",
     databaseURL: "https://be-happy-web-appy.firebaseio.com",
     projectId: "be-happy-web-appy",
     storageBucket: "be-happy-web-appy.appspot.com",
     messagingSenderId: "232740001079"
-  };
-  firebase.initializeApp(config);
+
+};
+firebase.initializeApp(config);
 var signedOn = true;
 var database = firebase.database();
+
+var emotionCount = {
+    Happiness: 0,
+    Sadness: 0,
+    Disgust: 0,
+    Anger: 0,
+    Fear: 0,
+    Surprise: 0,
+    Neutral: 0,
+}
+
+
+var emotions = ['Happiness', 'Sadness', 'Disgust', 'Anger', 'Fear', 'Surprise', 'Neutral'];
+//the below function populates the Main Div with buttons corresponding to the emotions array
+var populateEmotions = function() {
+    var emoteButtonsDiv = $('<div>');
+    for (var i = 0; i < emotions.length; i++) {
+        var emotion = $('<button>').html(emotions[i]).attr('id', emotions[i]).addClass('emotion');
+        emoteButtonsDiv.append(emotion);
+    }
+    $('#main').empty();
+    $('#main').append(emoteButtonsDiv);
+}
+//runs when page loads
+populateEmotions();
+//when an emotion button is clicked, empty the Main Div, then use the choices function
+//to populate with new buttons - main choices: gif, reddit, etc.
+//Update object in js, then 'update' to database
+$(document).on('click', '.emotion', function() {
+    $('#main').empty();
+    choices();
+    var thisEmote = $(this).attr('id');
+    for (var i in emotionCount) {
+        if (i == thisEmote) {
+            emotionCount[i]++;
+            console.log(emotionCount)
+            database.ref().set({
+                emotionCount
+            })
+        }
+    }
+})
+
+database.ref().on("value", function(snapshot) {
+    emotionCount = snapshot.val().emotionCount
+}, function(errorObject) {
+    console.log("The read failed: " + errorObject.code);
+
+});
+
 
 var choices = function() {
     var choiceDiv = $('<div>');
     var video = $('<button>').html('Video').attr('id', 'video');
     var audio = $('<button>').html('Song').attr('id', 'audio');
-    var reddit = $('<button>').html('Reddit').attr('id', 'reddit');
-    var pickUpLine = $('<button>').html('Bad Tinder Pickup Lines').attr('id', 'tinder');
+    var reddit = $('<button>').html('Motivation').attr('id', 'reddit');
+    var pickUpLine = $('<button>').html('Bad Tinder (NSFW)').attr('id', 'tinder');
     var giphy = $('<button>').html('Gif').attr('id', 'gif');
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
+    $('#main').empty();
     $('#main').append(choiceDiv);
     $('#reddit').css("color", "#b71c1c");
     $('#video').css("color", "#0091ea");
@@ -25,6 +78,7 @@ var choices = function() {
     $('#tinder').css("color", "#e91e63");
     $('#gif').css("color", "#ffc400");
 };
+
 
 $(document).on('click', '#reddit', function() {
     console.log('here')
@@ -75,9 +129,10 @@ $(document).on('click', '#tinder', function() {
     }, 1000)
 })
 
-$(document).on('click','#gif', function() {
-     $('#main').empty();
-        types();
+//if gif choice is clicked, below code runs, populates with gif category choices
+$(document).on('click', '#gif', function() {
+    $('#main').empty();
+    types();
 })
 
 var types = function() {
@@ -92,7 +147,7 @@ var types = function() {
     $('.giphy').css("color", "#ffc400");
 };
 
-$(document).on('click', '.giphy', function(){
+$(document).on('click', '.giphy', function() {
     $('#main').empty();
     var gifName = $(this).attr("data-gif")
     console.log(gifName)
@@ -105,12 +160,9 @@ $(document).on('click', '.giphy', function(){
     })
 })
 
-
-
 function displayGif(response) {
     $('#main').empty();
    var i = Math.floor((Math.random() * 60))
-
         
         var image = '<img src= " ' + response.data[i].images.fixed_height.url +
             '" data-still=" ' + response.data[i].images.fixed_height_still.url +
@@ -119,6 +171,7 @@ function displayGif(response) {
         image = '<div class = "center">' + image + "</div>";
         $('#main').append(image);
     
+
 
     $('.movImage').on('click', function() {
         var state = $(this).attr('data-state');
@@ -134,11 +187,6 @@ function displayGif(response) {
     resartOrNewChoice();
 }
 
-$('.emotion').on('click', function() {
-        $('#main').empty();
-        choices();
-})
-
 var resartOrNewChoice = function() {
     var newSelect = $('<div>').css('display','inline');
     var newChoice = $('<button>').html('New Choice').attr('id', 'newChoice');
@@ -149,11 +197,14 @@ var resartOrNewChoice = function() {
     $('#newChoice').css("color", "#9575cd");
     $('#newEmotion').css("color", "#ffecb3");
     $('#Stats').css("color", "#cfd8dc");
-}
 
 //runs choices if newChoice is clicked in resartOrNewChoice
 $(document).on('click', '#newChoice', function() {
     $('#main').empty();
+
+    var ctx = document.getElementById("myChart");
+    ctx.innerHTML = "";
+
     choices();
 })
 //runs original emotion div populator
@@ -166,6 +217,7 @@ $(document).on('click', '#Stats', function() {
     $('#main').empty();
     getStats();
 })
+
 var getStats = function() {
     database.ref().on('value', function(snapshot) {
         emotionCount = snapshot.val().emotionCount
@@ -182,7 +234,32 @@ var getStats = function() {
         $('#main').append(emoteDiv);
     }
 
-    
-    console.log('running')
-    resartOrNewChoice();
+    chart();
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 2000)
 }
+
+var chart = function() {
+    database.ref().on('value', function(snapshot) {
+        emotionCount = snapshot.val().emotionCount;
+        var ctx = $("#myChart");
+
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(emotionCount),
+
+
+                datasets: [{
+                    label: 'Global Stats',
+                    data: Object.values(emotionCount),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],}]},});})}
+

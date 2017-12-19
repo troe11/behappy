@@ -8,31 +8,24 @@
 </head>
 
 <body>
-	<div class="container">
-		<div class='row' id='banner'>
-			<h3>Be Happy Web Appy!</h3>
-			<h3>What are you feeling today, 'name'?</h3>
-		</div>
-		<div class="row hoverable" id="list">
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id='main'>
-				<button id="happiness" class="emotion hoverable">Happiness</button>
-				<button id="sadness" class="emotion hoverable">Sadness</button>
-				<button id="disgust" class="emotion hoverable">Disgust</button>
-				<button id="anger" class="emotion hoverable">Anger</button>
-				<button id="fear" class="emotion hoverable">Fear</button>
-				<button id="surprise" class="emotion hoverable">Surprise</button>
-				<button id="neutral" class="emotion hoverable">Neutral</button>
-			</div>
-		</div>
+  <--addClass hoverable-->
 
-
-	</div>
-
-	<script src="https://code.jquery.com/jquery.js"></script>
+    <div class="container">
+        <div class='row' id='banner'>
+            <h2>Be Happy Web Appy!</h2>
+            <h3>How are you feeling today?</h3>
+        </div>
+        <div class="row">
+            <canvas id="myChart" width="0" height="0"></canvas>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id='main'>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
     <script type="text/javascript" src="app.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 </body>
 
 </html>

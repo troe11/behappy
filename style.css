@@ -19,11 +19,11 @@ body {
     background-image: url('bg.jpg');
 }
 
-button:focus {outline:0 !important;}
-
-#banner {
-    text-align: center;
+button:focus {
+    outline: 0 !important;
 }
+
+
 
 #banner {
     background: #9fa4e0;
@@ -32,32 +32,34 @@ button:focus {outline:0 !important;}
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     font-size: 32px;
     margin: 1% auto;
+  text-align: center;
 }
 
-#happiness {
-    color: #ffecb3;
+
+.tinderImg {
+    height: 200px;
+    width: 250px;
 }
 
-#sadness {
-    color: #3d5afe;
-}
-
-#disgust {
-    color: #a5d6a7;
-}
-
-#anger {
+.stats,
+.redditText {
+    background: #9fa4e0;
     color: #f1376b;
+    text-align: center;
+    font-size: 32px;
+    text-shadow: silver 0px 0px 1px;
+    -webkit-font-smoothing: antialiased;
+    padding: 2%;
 }
 
-#fear {
-    color: #303f9f;
-}
+canvas {
+    max-height: 300px;
+    max-width: 300px;
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 
-#surprise {
-    color: #84ffff;
-}
-
-#neutral {
-    color: #eceff1;
 }
