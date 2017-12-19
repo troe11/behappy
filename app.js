@@ -1,3 +1,4 @@
+
 var config = {
     apiKey: "AIzaSyBpdGq5ONXfo854jcRj-4OwRWUYggFkRk4",
     authDomain: "be-happy-web-appy.firebaseapp.com",
@@ -5,6 +6,7 @@ var config = {
     projectId: "be-happy-web-appy",
     storageBucket: "be-happy-web-appy.appspot.com",
     messagingSenderId: "232740001079"
+
 };
 firebase.initializeApp(config);
 var signedOn = true;
@@ -70,10 +72,14 @@ var choices = function() {
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
     $('#main').empty();
     $('#main').append(choiceDiv);
+    $('#reddit').css("color", "#b71c1c");
+    $('#video').css("color", "#0091ea");
+    $('#audio').css("color", "#64ffda");
+    $('#tinder').css("color", "#e91e63");
+    $('#gif').css("color", "#ffc400");
 };
 
 
-//if reddit button is clicked, it currently pulls only text posts from GetMotivated
 $(document).on('click', '#reddit', function() {
     console.log('here')
     $('#main').empty();
@@ -122,6 +128,7 @@ $(document).on('click', '#tinder', function() {
         resartOrNewChoice();
     }, 1000)
 })
+
 //if gif choice is clicked, below code runs, populates with gif category choices
 $(document).on('click', '#gif', function() {
     $('#main').empty();
@@ -137,6 +144,7 @@ var types = function() {
     var kawaii = $('<button data-gif = "kawaii">').html('Kawaii').attr('class', 'giphy');
     typeDiv.append(cat, comedy, dog, random, kawaii);
     $('#main').append(typeDiv);
+    $('.giphy').css("color", "#ffc400");
 };
 
 $(document).on('click', '.giphy', function() {
@@ -144,24 +152,27 @@ $(document).on('click', '.giphy', function() {
     var gifName = $(this).attr("data-gif")
     console.log(gifName)
     $.ajax({
-            url: 'https://api.giphy.com/v1/gifs/search?q= ' + gifName + ' &api_key=dc6zaTOxFJmzC&limit=60',
-            type: 'GET',
-        })
-        .done(function(response) {
-            displayGif(response);
-        })
-
+        url: 'https://api.giphy.com/v1/gifs/search?q= ' + gifName + ' &api_key=dc6zaTOxFJmzC&limit=60',
+        type: 'GET',
+    })
+    .done(function(response) {
+        displayGif(response);
+    })
 })
 
 function displayGif(response) {
     $('#main').empty();
-    var i = Math.floor((Math.random() * 60))
-    var image = '<img src= " ' + response.data[i].images.fixed_height_still.url +
-        '" data-still=" ' + response.data[i].images.fixed_height_still.url +
-        ' " data-animate=" ' + response.data[i].images.fixed_height.url + '" data-state="still" class="movImage" style= "width:500px; height:500px">';
+   var i = Math.floor((Math.random() * 60))
+        
+        var image = '<img src= " ' + response.data[i].images.fixed_height.url +
+            '" data-still=" ' + response.data[i].images.fixed_height_still.url +
+            ' " data-animate=" ' + response.data[i].images.fixed_height.url + '" data-state="animate" class="movImage" style= "width:500px; height:500px">';
 
-    image = '<div class = "center">' + image + "</div>";
-    $('#main').append(image);
+        image = '<div class = "center">' + image + "</div>";
+        $('#main').append(image);
+    
+
+
     $('.movImage').on('click', function() {
         var state = $(this).attr('data-state');
         if (state == 'still') {
@@ -171,39 +182,38 @@ function displayGif(response) {
             $(this).attr('src', $(this).attr("data-still"));
             $(this).attr('data-state', 'still');
         }
+
     });
     resartOrNewChoice();
 }
 
-//adds two buttons to the bottom, giving user the choice to go back to main
-//menu and choose new emotion, or select another choice
 var resartOrNewChoice = function() {
-    var newSelect = $('<div>').css('display', 'inline');
+    var newSelect = $('<div>').css('display','inline');
     var newChoice = $('<button>').html('New Choice').attr('id', 'newChoice');
     var resart = $('<button>').html('Change your Emotion?').attr('id', 'newEmotion');
-    var getStatsBtn = $('<button>').html('Global Stats').attr('id', 'getStats');
-    newSelect.append(newChoice, resart, getStatsBtn);
+    var StatsBtn = $('<button>').html('Global Stats').attr('id', 'Stats');
+    newSelect.append(newChoice, resart, StatsBtn);
     $('#main').append(newSelect);
-}
+    $('#newChoice').css("color", "#9575cd");
+    $('#newEmotion').css("color", "#ffecb3");
+    $('#Stats').css("color", "#cfd8dc");
 
 //runs choices if newChoice is clicked in resartOrNewChoice
 $(document).on('click', '#newChoice', function() {
     $('#main').empty();
+
     var ctx = document.getElementById("myChart");
     ctx.innerHTML = "";
-
 
     choices();
 })
 //runs original emotion div populator
 $(document).on('click', '#newEmotion', function() {
     $('#main').empty();
-    var ctx = document.getElementById("myChart");
-    ctx.innerHTML = "";
     populateEmotions();
 })
 
-$(document).on('click', '#getStats', function() {
+$(document).on('click', '#Stats', function() {
     $('#main').empty();
     getStats();
 })
@@ -223,6 +233,7 @@ var getStats = function() {
         var emoteName = emoteDiv.html(i + ': ' + Math.floor(emotionCount[i] / total * 100) + '%<hr>');
         $('#main').append(emoteDiv);
     }
+
     chart();
     setTimeout(function() {
         resartOrNewChoice();
@@ -251,4 +262,4 @@ var chart = function() {
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)'
                     ],}]},});})}
-chart();
+

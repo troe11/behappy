@@ -23,9 +23,18 @@ button:focus {
     outline: 0 !important;
 }
 
+
+
 #banner {
-    text-align: center;
+    background: #9fa4e0;
+    color: #ffecb3;
+    font-family: "Great Vibes";
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-size: 32px;
+    margin: 1% auto;
+  text-align: center;
 }
+
 
 .tinderImg {
     height: 200px;
@@ -52,4 +61,5 @@ canvas {
     left: 0;
     right: 0;
     margin: auto;
+
 }
