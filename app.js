@@ -20,6 +20,7 @@ var emotionCount = {
     Neutral: 0,
 }
 
+
 var emotions = ['Happiness', 'Sadness', 'Disgust', 'Anger', 'Fear', 'Surprise', 'Neutral'];
 //the below function populates the Main Div with buttons corresponding to the emotions array
 var populateEmotions = function() {
@@ -33,7 +34,6 @@ var populateEmotions = function() {
 }
 //runs when page loads
 populateEmotions();
-
 //when an emotion button is clicked, empty the Main Div, then use the choices function
 //to populate with new buttons - main choices: gif, reddit, etc.
 //Update object in js, then 'update' to database
@@ -65,7 +65,7 @@ var choices = function() {
     var video = $('<button>').html('Video').attr('id', 'video');
     var audio = $('<button>').html('Song').attr('id', 'audio');
     var reddit = $('<button>').html('Motivation').attr('id', 'reddit');
-    var pickUpLine = $('<button>').html('Bad Tinder Pickup Lines').attr('id', 'tinder');
+    var pickUpLine = $('<button>').html('Bad Tinder (NSFW)').attr('id', 'tinder');
     var giphy = $('<button>').html('Gif').attr('id', 'gif');
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
     $('#main').empty();
@@ -189,11 +189,17 @@ var resartOrNewChoice = function() {
 //runs choices if newChoice is clicked in resartOrNewChoice
 $(document).on('click', '#newChoice', function() {
     $('#main').empty();
+    var ctx = document.getElementById("myChart");
+    ctx.innerHTML = "";
+
+
     choices();
 })
 //runs original emotion div populator
 $(document).on('click', '#newEmotion', function() {
     $('#main').empty();
+    var ctx = document.getElementById("myChart");
+    ctx.innerHTML = "";
     populateEmotions();
 })
 
@@ -201,21 +207,48 @@ $(document).on('click', '#getStats', function() {
     $('#main').empty();
     getStats();
 })
+
 var getStats = function() {
     database.ref().on('value', function(snapshot) {
-        $('#main').empty();
-        var total = 0;
-        for (var i in emotionCount) {
-            total += emotionCount[i];
-        }
-        for (var i in emotionCount) {
-            console.log(total);
-            var emoteDiv = $('<div>').addClass('stats');
-            var emoteName = emoteDiv.html(i + ': ' + Math.floor(emotionCount[i] / total * 100) + '%<hr>');
-            $('#main').append(emoteDiv);
-        }
-
+        emotionCount = snapshot.val().emotionCount
     })
-    console.log('running')
-    resartOrNewChoice();
+    $('#main').empty();
+    var total = 0;
+    for (var i in emotionCount) {
+        total += emotionCount[i];
+    }
+    for (var i in emotionCount) {
+        console.log(total);
+        var emoteDiv = $('<div>').addClass('stats');
+        var emoteName = emoteDiv.html(i + ': ' + Math.floor(emotionCount[i] / total * 100) + '%<hr>');
+        $('#main').append(emoteDiv);
+    }
+    chart();
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 2000)
 }
+
+var chart = function() {
+    database.ref().on('value', function(snapshot) {
+        emotionCount = snapshot.val().emotionCount;
+        var ctx = $("#myChart");
+
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(emotionCount),
+
+
+                datasets: [{
+                    label: 'Global Stats',
+                    data: Object.values(emotionCount),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],}]},});})}
+chart();
