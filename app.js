@@ -67,6 +67,7 @@ var choices = function() {
     var giphy = $('<button>').html('Gif').attr('id', 'gif');
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
     $('#main').append(choiceDiv);
+
 };
 
 $(document).on('click', '#reddit', function() {
@@ -150,7 +151,8 @@ var resartOrNewChoice = function() {
     var newSelect = $('<div>').css('display','inline');
     var newChoice = $('<button>').html('New Choice').attr('id', 'newChoice');
     var resart = $('<button>').html('Change your Emotion?').attr('id', 'newEmotion');
-    newSelect.append(newChoice, resart);
+    var StatsBtn = $('<button>').html('Global Stats').attr('id', 'Stats');
+    newSelect.append(newChoice, resart, StatsBtn);
     $('#main').append(newSelect);
 }
 
@@ -164,3 +166,28 @@ $(document).on('click', '#newEmotion', function() {
     $('#main').empty();
     populateEmotions();
 })
+
+$(document).on('click', '#Stats', function() {
+    $('#main').empty();
+    getStats();
+})
+var getStats = function() {
+    database.ref().on('value', function(snapshot) {
+        emotionCount = snapshot.val().emotionCount
+    })
+    $('#main').empty();
+    var total = 0;
+    for (var i in emotionCount) {
+        total += emotionCount[i];
+    }
+    for (var i in emotionCount) {
+        console.log(total);
+        var emoteDiv = $('<div>').addClass('stats');
+        var emoteName = emoteDiv.html(i + ': ' + Math.floor(emotionCount[i] / total * 100) + '%<hr>');
+        $('#main').append(emoteDiv);
+    }
+
+    
+    console.log('running')
+    resartOrNewChoice();
+}
