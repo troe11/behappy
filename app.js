@@ -197,7 +197,7 @@ var resartOrNewChoice = function() {
     $('#newChoice').css("color", "#9575cd");
     $('#newEmotion').css("color", "#ffecb3");
     $('#Stats').css("color", "#cfd8dc");
-
+}
 //runs choices if newChoice is clicked in resartOrNewChoice
 $(document).on('click', '#newChoice', function() {
     $('#main').empty();
