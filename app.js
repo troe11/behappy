@@ -15,33 +15,64 @@ var choices = function() {
     var video = $('<button>').html('Video').attr('id', 'video');
     var audio = $('<button>').html('Song').attr('id', 'audio');
     var reddit = $('<button>').html('Reddit').attr('id', 'reddit');
-    var pickUpLine = $('<button>').html('Pick Up Line').attr('id', 'pickUp');
+    var pickUpLine = $('<button>').html('Bad Tinder Pickup Lines').attr('id', 'tinder');
     var giphy = $('<button>').html('Gif').attr('id', 'gif');
     choiceDiv.append(audio, video, reddit, pickUpLine, giphy);
     $('#main').append(choiceDiv);
+    $('#reddit').css("color", "#b71c1c");
+    $('#video').css("color", "#0091ea");
+    $('#audio').css("color", "#64ffda");
+    $('#tinder').css("color", "#e91e63");
+    $('#gif').css("color", "#ffc400");
 };
 
-$(document).on('click','#reddit', function() {
+$(document).on('click', '#reddit', function() {
     console.log('here')
     $('#main').empty();
     $.getJSON(
-        "http://www.reddit.com/r/getMotivated.json?jsonp=?",
+        "https://www.reddit.com/r/GetMotivated/top/.json?count=25&after=t3_10omtd/",
         function foo(data) {
+            var text = [];
             console.log(data)
             $.each(
                 data.data.children.slice(0, 200),
                 function(i, post) {
                     if (post.data.title.includes("[Text]")) {
-                        console.log(i, post.data.title);
-                        var text = $('<div>').html(post.data.title.replace('[Text]', ''));
-                        $('#main').append(text)
+                        text.push(post.data.title.replace('[Text]', ''))
 
                     }
-                }
-            )
-        }
-    )
+                })
+            var randText = Math.floor(Math.random() * text.length);
+            var textDiv = $('<div>')
+                .html(text[randText])
+                .addClass('redditText');
+            $('#main').append(textDiv);
+        })
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 1000)
+})
 
+$(document).on('click', '#tinder', function() {
+    $('#main').empty();
+    $.getJSON(
+        "http://www.reddit.com/r/tinder.json?jsonp=?",
+        function foo(data) {
+            var images = [];
+            $.each(
+                data.data.children.slice(0, 200),
+                function(i, post) {
+                    if (post.data.domain.includes("i.redd.it")) {
+                        images.push(post.data.url);
+                    }
+                })
+            var randImg = Math.floor(Math.random() * images.length);
+            var image = $('<div>').html('<img src=' + images[randImg] + '>').addClass('center');
+            $('#main').append(image);
+        })
+    setTimeout(function() {
+        resartOrNewChoice();
+    }, 1000)
 })
 
 $(document).on('click','#gif', function() {
@@ -54,10 +85,11 @@ var types = function() {
     var cat = $('<button data-gif = "cat">').html('Cat').attr('class', 'giphy');
     var comedy = $('<button data-gif = "comedy">').html('Comedy').attr('class', 'giphy');
     var dog = $('<button data-gif = "dog">').html('Dog').attr('class', 'giphy');
-    // var  = $('<button>').html('').attr('class', 'giphy');
-    // var  = $('<button>').html('').attr('class', 'giphy');
-    typeDiv.append(cat, comedy, dog);
+    var random = $('<button data-gif = "random">').html('Random').attr('class', 'giphy');
+    var kawaii = $('<button data-gif = "kawaii">').html('Kawaii').attr('class', 'giphy');
+    typeDiv.append(cat, comedy, dog, random, kawaii);
     $('#main').append(typeDiv);
+    $('.giphy').css("color", "#ffc400");
 };
 
 $(document).on('click', '.giphy', function(){
@@ -80,9 +112,9 @@ function displayGif(response) {
    var i = Math.floor((Math.random() * 60))
 
         
-        var image = '<img src= " ' + response.data[i].images.fixed_height_still.url +
+        var image = '<img src= " ' + response.data[i].images.fixed_height.url +
             '" data-still=" ' + response.data[i].images.fixed_height_still.url +
-            ' " data-animate=" ' + response.data[i].images.fixed_height.url + '" data-state="still" class="movImage" style= "width:500px; height:500px">';
+            ' " data-animate=" ' + response.data[i].images.fixed_height.url + '" data-state="animate" class="movImage" style= "width:500px; height:500px">';
 
         image = '<div class = "center">' + image + "</div>";
         $('#main').append(image);
@@ -99,110 +131,58 @@ function displayGif(response) {
         }
 
     });
+    resartOrNewChoice();
 }
 
 $('.emotion').on('click', function() {
-    var user = firebase.auth().currentUser;
-    var currentEmote = $(this).attr('id');
-    var currentTime = moment().format('dddd HH:mm');
-    if (signedOn) {
-        console.log('Signed in');
         $('#main').empty();
         choices();
-        database.ref('/users').child(user.uid).push({
-            emotion: currentEmote,
-            datetime: currentTime
-        })
-    } else { alert('You need to sign In or Up') }
-    console.log(currentEmote, currentTime)
-
-
 })
 
-$('#signUp').on('click', function() {
-    event.preventDefault();
-    var email = $('#email').val();
-    var password = $('#password').val();
+var resartOrNewChoice = function() {
+    var newSelect = $('<div>').css('display','inline');
+    var newChoice = $('<button>').html('New Choice').attr('id', 'newChoice');
+    var resart = $('<button>').html('Change your Emotion?').attr('id', 'newEmotion');
+    var StatsBtn = $('<button>').html('Global Stats').attr('id', 'Stats');
+    newSelect.append(newChoice, resart, StatsBtn);
+    $('#main').append(newSelect);
+    $('#newChoice').css("color", "#9575cd");
+    $('#newEmotion').css("color", "#ffecb3");
+    $('#Stats').css("color", "#cfd8dc");
+}
 
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-    });
-
-    console.log(email, password)
+//runs choices if newChoice is clicked in resartOrNewChoice
+$(document).on('click', '#newChoice', function() {
+    $('#main').empty();
+    choices();
+})
+//runs original emotion div populator
+$(document).on('click', '#newEmotion', function() {
+    $('#main').empty();
+    populateEmotions();
 })
 
-$('#signIn').on('click', function() {
-    signedOn = true;
-    event.preventDefault();
-    var email = $('#email').val();
-    var password = $('#password').val();
-
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage)
-    });
-
-    console.log(email, password)
+$(document).on('click', '#Stats', function() {
+    $('#main').empty();
+    getStats();
 })
-
-$('#signOut').on('click', function() {
-
-
-    firebase.auth().signOut().then(function() {
-        // Sign-out successful.
-    }).catch(function(error) {
-        // An error happened.
-    });
-
-    console.log(email, password)
-})
-
-
-firebase.auth().onAuthStateChanged(function(user) {
-    console.log(user)
-    if (user) {
-        database.ref('/users').child(user.uid).once('value').then(function(snapshot) {
-            //Look up documentation for once method
-
-            $('#status').html('Signed In')
-
-            userName = snapshot.val().name;
-            userAge = snapshot.val().age;
-            $('#userName').text(userName);
-            $('#userAge').text(userAge);
-            if (user != null) {
-                user.providerData.forEach(function(profile) {
-                    console.log(profile)
-                    // console.log("Sign-in provider: " + profile.providerId);
-                    // console.log("  Provider-specific UID: " + profile.uid);
-                    // console.log("  Name: " + profile.displayName);
-                    // console.log("  Email: " + profile.email);
-                    // console.log("  Photo URL: " + profile.photoURL);
-                });
-
-            }
-        })
-    } else {
-        console.log('none')
-        $('#status').html('Signed Out')
+var getStats = function() {
+    database.ref().on('value', function(snapshot) {
+        emotionCount = snapshot.val().emotionCount
+    })
+    $('#main').empty();
+    var total = 0;
+    for (var i in emotionCount) {
+        total += emotionCount[i];
     }
-});
-
-$('#create').on('click', function() {
-    event.preventDefault();
-    var user = firebase.auth().currentUser;
-    if (user) {
-        console.log('Signed in');
-        database.ref('/users').child(user.uid).set({
-            name: $('#name').val().trim(),
-            age: $('#age').val().trim()
-        })
-    } else {
-        console.log('Not signed in')
+    for (var i in emotionCount) {
+        console.log(total);
+        var emoteDiv = $('<div>').addClass('stats');
+        var emoteName = emoteDiv.html(i + ': ' + Math.floor(emotionCount[i] / total * 100) + '%<hr>');
+        $('#main').append(emoteDiv);
     }
-})
+
+    
+    console.log('running')
+    resartOrNewChoice();
+}

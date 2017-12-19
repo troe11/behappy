@@ -26,8 +26,8 @@ button:focus {outline:0 !important;}
 }
 
 #banner {
-    background: #ffcdd2;
-    color: #f1376b;
+    background: #9fa4e0;
+    color: #ffecb3;
     font-family: "Great Vibes";
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     font-size: 32px;
