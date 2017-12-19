@@ -28,7 +28,7 @@ var emotions = ['Happiness', 'Sadness', 'Disgust', 'Anger', 'Fear', 'Surprise', 
 var populateEmotions = function() {
     var emoteButtonsDiv = $('<div>');
     for (var i = 0; i < emotions.length; i++) {
-        var emotion = $('<button>').html(emotions[i]).attr('id', emotions[i]).addClass('emotion');
+        var emotion = $('<button>').html(emotions[i]).attr('id', emotions[i]).addClass('emotion').addClass('hoverable');
         emoteButtonsDiv.append(emotion);
     }
     $('#main').empty();
