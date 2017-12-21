@@ -110,7 +110,7 @@ $(document).on('click', '#reddit', function() {
 $(document).on('click', '#tinder', function() {
     $('#main').empty();
     $.getJSON(
-        "http://www.reddit.com/r/tinder.json?jsonp=?",
+        "https://www.reddit.com/r/tinder.json?jsonp=?",
         function foo(data) {
             var images = [];
             $.each(
