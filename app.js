@@ -33,13 +33,13 @@ var populateEmotions = function() {
     }
     $('#main').empty();
     $('#main').append(emoteButtonsDiv);
-    $('#happiness').css("color", "#ffecb3");
-    $('#sadness').css("color", "#3d5afe");
-    $('#disgust').css("color", "#a5d6a7");
-    $('#anger').css("color", "#f1376b");
-    $('#fear').css("color", "#303f9f");
-    $('#surprise').css("color", "#84ffff");
-    $('#neutral').css("color", "#eceff1");
+    $('#Happiness').css("color", "#ffecb3");
+    $('#Sadness').css("color", "#3d5afe");
+    $('#Disgust').css("color", "#a5d6a7");
+    $('#Anger').css("color", "#f1376b");
+    $('#Fear').css("color", "#303f9f");
+    $('#Surprise').css("color", "#84ffff");
+    $('#Neutral').css("color", "#eceff1");
 }
 //runs when page loads
 populateEmotions();
