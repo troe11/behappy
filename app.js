@@ -84,23 +84,19 @@ $(document).on('click', '#reddit', function() {
     console.log('here')
     $('#main').empty();
     $.getJSON(
-        "https://www.reddit.com/r/GetMotivated/top/.json?count=25&after=t3_10omtd/",
+        "https://www.reddit.com/r/GetMotivated.json?q=text",
         function foo(data) {
-            var text = [];
-            console.log(data)
+            var images = [];
             $.each(
                 data.data.children.slice(0, 200),
                 function(i, post) {
-                    if (post.data.title.includes("[Text]")) {
-                        text.push(post.data.title.replace('[Text]', ''))
-
+                    if (post.data.domain.includes("i.redd.it")) {
+                        images.push(post.data.url);
                     }
                 })
-            var randText = Math.floor(Math.random() * text.length);
-            var textDiv = $('<div>')
-                .html(text[randText])
-                .addClass('redditText');
-            $('#main').append(textDiv);
+            var randImg = Math.floor(Math.random() * images.length);
+            var image = $('<div>').html('<img src=' + images[randImg] + '>').addClass('center');
+            $('#main').append(image);
         })
     setTimeout(function() {
         resartOrNewChoice();
